@@ -126,6 +126,18 @@ class DataTable
         return $this;
     }
 
+    /**
+     * Escape column
+     * 
+     * @param String $column
+     * @param bool $escape
+     */
+    public function escape($column, $escape = TRUE)
+    {
+        $this->columnDefs->escape($column, $escape);
+        return $this;
+    }
+
      /**
      * Set Searchable columns
      * @param String|Array

@@ -99,14 +99,14 @@ class DataTableColumnDefs
         
     }
 
-    public function excludeEscape($alias)
+    public function escape($alias, $escape = TRUE)
     {
         if($alias)
         {
             $column = $this->getColumnBy('alias', $alias);
             if(is_object($column))
             {
-                $column->escape = TRUE;
+                $column->escape = $escape;
             }
             
         }
