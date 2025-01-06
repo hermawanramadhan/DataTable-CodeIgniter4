@@ -9,6 +9,6 @@ class Column{
 	public $callback;
 	public $searchable = TRUE;
 	public $orderable = TRUE;
-
+	public $escape = TRUE;
 }
 
