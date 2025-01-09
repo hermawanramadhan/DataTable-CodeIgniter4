@@ -320,7 +320,7 @@ class DataTableColumnDefs
 
                     if( ! empty($selectParsed['alias']) )
                     {
-                        $key    = substr($QBSelect[$index], 0,-1*(strlen($selectParsed['alias']['base_expr'])));
+                        $key    = substr($QBSelect[$index], 0, -1*strlen($selectParsed['alias']['base_expr']) + 1);
                         $alias  = end($selectParsed['alias']['no_quotes']['parts']);
                     }
                     else
@@ -347,7 +347,7 @@ class DataTableColumnDefs
 
             foreach ($QBFrom as $table) 
             {
-                $fieldData = $builder->db()->getFieldData($table);
+                $fieldData = $builder->db()->getFieldData($this->checkTableName($table));
                 foreach ($fieldData as $field)
                 {
 
@@ -363,7 +363,7 @@ class DataTableColumnDefs
 
             foreach ($QBJoin as $table) 
             {
-                $fieldData = $builder->db()->getFieldData($table);
+                $fieldData = $builder->db()->getFieldData($this->checkTableName($table));
                 foreach ($fieldData as $field)
                 {
                     $column = new Column();
@@ -389,6 +389,18 @@ class DataTableColumnDefs
         }
         return NULL;
     }
-  
+
+     public function checkTableName($tableName)
+    {
+        // if table name have has dot (.) character (ex: database.table or schema.table which is not supported by getFieldData() method)
+        if(strpos($tableName, '.') !== FALSE)
+        {
+            $tableName = explode('.', $tableName);
+            $tableName = end($tableName);
+        }
+
+        return $tableName;
+    }
+
 
 }   // End of DataTableColumnDefs Class.
