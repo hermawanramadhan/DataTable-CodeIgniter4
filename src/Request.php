@@ -9,8 +9,8 @@ class Request
 	 /**
      * Get DataTable Request
      *  
-     * @param  String $requestName
-     * @return String|Array
+     * @param  string $requestName
+     * @return string|array
      */
 
 

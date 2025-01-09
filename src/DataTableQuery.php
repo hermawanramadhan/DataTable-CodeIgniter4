@@ -5,6 +5,10 @@ namespace Hermawan\DataTables;
 class DataTableQuery
 {
 
+    /**
+     * Builder from CodeIgniter Query Builder
+     * @param  \CodeIgniter\Database\BaseBuilder| \CodeIgniter\BaseModel $builder
+     */
     private $builder;
 
     private $columnDefs;

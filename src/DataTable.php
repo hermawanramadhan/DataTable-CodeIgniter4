@@ -6,32 +6,32 @@ use \Config\Services;
 class DataTable
 {
 
-     /**
+    /**
      * DataTableQuery object.
      *
-     * @var \Hermawan\CodeIgniter4-DataTable\DataTableQuery
+     * @var DataTableQuery
      */
-    private $query; 
+    private $query;
 
 
-     /**
+    /**
      * DataTablColumns object.
      *
-     * @var \Hermawan\CodeIgniter4-DataTable\DataTableColumns
+     * @var DataTableColumnDefs
      */
-    private $columnDefs; 
+    private $columnDefs;
 
 
-     /**
+    /**
      * Builder from CodeIgniter Query Builder
-     * @param  Builder $builder
+     * @param  \CodeIgniter\Database\BaseBuilder| \CodeIgniter\BaseModel $builder
      */
     public function __construct($builder)
     {
-        if(is_subclass_of($builder, '\CodeIgniter\BaseModel') && method_exists($builder, 'builder')){
+        if (is_subclass_of($builder, '\CodeIgniter\BaseModel') && method_exists($builder, 'builder')) {
             $builder = $builder->builder();
         }
-        $this->query      = new DataTableQuery($builder);
+        $this->query = new DataTableQuery($builder);
         $this->columnDefs = new DataTableColumnDefs($builder);
     }
 
@@ -39,9 +39,9 @@ class DataTable
      * Make a DataTable instance from builder.
      *  
      * Builder from CodeIgniter Query Builder
-     * @param  Builder $builder
+     * @param  \CodeIgniter\Database\BaseBuilder| \CodeIgniter\BaseModel $builder
      */
-    public static function of($builder)
+    public static function of($builder): DataTable
     {
         return new self($builder);
     }
@@ -69,7 +69,7 @@ class DataTable
 
     /**
      * Add numbering to first column
-     * @param String $column 
+     * @param string $column 
      */
     public function addNumbering($column = NULL)
     {
@@ -77,13 +77,13 @@ class DataTable
         return $this;
     }
 
-   
-     /**
+
+    /**
      * Add extra column 
      *
-     * @param String $column
+     * @param string $column
      * @param Closure $callback
-     * @param String|int $position
+     * @param string|int $position
      */
     public function add($column, $callback, $position = 'last')
     {
@@ -94,10 +94,10 @@ class DataTable
     /**
      * Edit column 
      *
-     * @param String $column
+     * @param string $column
      * @param Closure $callback
      */
-    public function edit($column, $callback) 
+    public function edit($column, $callback)
     {
         $this->columnDefs->edit($column, $callback);
         return $this;
@@ -106,7 +106,7 @@ class DataTable
     /**
      * Format column 
      *
-     * @param String $column
+     * @param string $column
      * @param Closure $callback
      */
     public function format($column, $callback)
@@ -115,10 +115,10 @@ class DataTable
         return $this;
     }
 
-     /**
+    /**
      * Hide column 
      *
-     * @param String $column
+     * @param string $column
      */
     public function hide($column)
     {
@@ -129,7 +129,7 @@ class DataTable
     /**
      * Escape column
      * 
-     * @param String $column
+     * @param string $column
      * @param bool $escape
      */
     public function escape($column, $escape = TRUE)
@@ -138,9 +138,9 @@ class DataTable
         return $this;
     }
 
-     /**
+    /**
      * Set Searchable columns
-     * @param String|Array
+     * @param string|array
      */
     public function setSearchableColumns($columns)
     {
@@ -150,7 +150,7 @@ class DataTable
 
     /**
      * Add Searchable columns
-     * @param String|Array
+     * @param string|array
      */
     public function addSearchableColumns($columns)
     {
@@ -160,32 +160,31 @@ class DataTable
 
 
 
-     /**
+    /**
      * Return JSON output 
      *
      * @param bool $returnAsObject
-     * @return JSON
+     * @return \CodeIgniter\HTTP\ResponseInterface
      */
     public function toJson($returnAsObject = NULL)
     {
 
-        if(! Request::get('draw'))
-        {
+        if (!Request::get('draw')) {
             return self::throwError('no datatable request detected');
         }
 
-        if($returnAsObject !== NULL) 
+        if ($returnAsObject !== NULL)
             $this->columnDefs->returnAsObject($returnAsObject);
 
         $this->query->setColumnDefs($this->columnDefs);
-        
+
         $response = Services::response();
 
         return $response->setJSON([
-            'draw'              => Request::get('draw'),
-            'recordsTotal'      => $this->query->countAll(),
-            'recordsFiltered'   => $this->query->countFiltered(),
-            'data'              => $this->query->getDataResult(),
+            'draw' => Request::get('draw'),
+            'recordsTotal' => $this->query->countAll(),
+            'recordsFiltered' => $this->query->countFiltered(),
+            'data' => $this->query->getDataResult(),
 
         ]);
     }
@@ -194,18 +193,18 @@ class DataTable
     /**
      * Throw Error
      *
-     * @param String $message
-     * @return Error
+     * @param string $message
+     * @return \CodeIgniter\HTTP\ResponseInterface
      */
     public static function throwError($message)
     {
         $response = Services::response();
         return $response->setJSON([
-            'error'             => $message,
+            'error' => $message,
 
         ]);
     }
 
 
-   
+
 }   // End of DataTables Library Class.

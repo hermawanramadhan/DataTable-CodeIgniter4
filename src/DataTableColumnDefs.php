@@ -293,7 +293,6 @@ class DataTableColumnDefs
                                   $selectParsed['no_quotes']['parts'][0].'.'.$selectParsed['no_quotes']['parts'][1] :
                                   $selectParsed['no_quotes']['parts'][0];
                                   
-                        $alias  = $alias;
 
                     }
 
